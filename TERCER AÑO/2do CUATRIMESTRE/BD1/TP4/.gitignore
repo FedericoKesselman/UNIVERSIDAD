@@ -1,0 +1,14 @@
+# Archivos y carpetas de Docker
+mysql_data/
+*.log
+*.pid
+
+# Archivos del sistema
+.DS_Store
+
+# Archivos temporales
+__pycache__/
+*.pyc
+
+# Archivos grandes de entorno
+.env
