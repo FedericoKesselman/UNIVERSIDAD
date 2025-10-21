@@ -1,0 +1,37 @@
+a. ¿Qué atributos del plan de ejecución encuentra relevantes para evaluar la performance de la consulta?
+    • table: qué tabla se está leyendo.
+    • select_type: tipo de join (qué tan eficiente es el join o la búsqueda).
+    • possible_keys: qué índices podría usar mysql. si está vacío no hay índices relevantes.
+    • key: íncide que decidió usar.
+    • key_lenght: longitud del índice escogido.
+    • ref: columnas o constantes fueron usadas con la clave para seleccionar las filas.
+    • rows: cantidad de filas estimadas necesarias en la ejecución.
+
+    En este caso los atributos más relevantes para evaluar la eficiencia de los joins son type y key. 
+
+b. Observe en particular el atributo type ¿cómo se están aplicando los JOIN entre las tablas involucradas?
+    En el atributo type se ve "eq_ref" para todas las tablas menos para la de medical_review, que tiene index. 
+    • eq_ref: MySQL usa una búsqueda por clave primaria o índice único (una fila por coincidencia).
+        • Muy eficiente.
+    • index: Se recorre un índice completo (sin leer toda la tabla, pero sin filtrar tanto).
+        • Eficiencia regultar.
+    
+    El único que podría optimizarse más es mr (medical_review), que aparece con index, es decir, está leyendo todo el índice completo en lugar de hacer una búsqueda más dirigida.
+
+c. Según lo que observó en los puntos anteriores, ¿qué mejoras se pueden realizar para optimizar la consulta? 
+    Viendo que ya se usan claves primarias (PRIMARY) en casi todos los joins, las mejoras se centran en los filtros del WHERE:
+	•	d.doctor_specialty = 'Cardiology'
+	•	p.patient_city = 'Rosario'
+
+    se propone crear índices para estas columnas de filtro, ya que son condiciones directas en el WHERE:
+        CREATE INDEX idx_doctor_specialty ON doctor(doctor_specialty);
+        CREATE INDEX idx_patient_city ON patient(patient_city);
+
+d. Aplique las mejoras propuestas y vuelva a analizar el plan de ejecución. ¿Qué cambios observa?
+    Luego de crear los índices idx_doctor_specialty y idx_patient_city, el EXPLAIN muestra estos índices disponibles en las columnas possible_keys de las tablas doctor y patient.
+    
+    Si bien el atributo type se mantiene en eq_ref para las mismas tablas y el index para medical_review, se observa que ahora se reconoce los nuevos índices como posibles claves de búsqueda para las condiciones del WHERE.
+
+    Indica mejor selectividad de los filtros sobre las tablas doctor y patient, reduciendo la cantidad de filas analizadas.
+
+    Si bien siguen habiendo mejoras, ahora MySQL dispone de índices que permiten un acceso más optimizado a las tablas filtradas.

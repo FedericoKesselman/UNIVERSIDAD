@@ -1,0 +1,19 @@
+Indique si las siguientes afirmaciones sobre triggers son verdaderas o falsas. Justifique las falsas.
+
+a- Un trigger se ejecuta únicamente cuando se inserta una fila en una tabla.
+    Falso. Un trigger puede ser ejecutado cuando se inserta una fila en una tabla, cuando se actualiza o cuando se elimina. {INSERT | UPDATE | DELETE}
+
+b- Un trigger puede ejecutarse antes o después de la operación, esto es definido automáticamente según el tipo de la operación (UPDATE, INSERT o DELETE)
+    Falso. El momento de ejecución no es definido automáticamente según el tipo de operación. Es definido manualmente { BEFORE | AFTER }
+
+c- Todo trigger debe asociarse a una tabla en concreto. 
+    Verdadero.
+
+d- NEW y OLD son palabras clave que permiten acceder a los valores de las filas afectadas y se pueden usar ambos independientemente de la operación utilizada.
+    Falso. Las palabras clave NEW y OLD permiten acceder a los valores de las filas, pero no se pueden usar siempre las dos:
+        * INSERT: NEW se puede, pero OLD no
+        * UPDATE: se pueden usar las dos
+        * DELETE: OLD se puede, pero NEW no 
+
+e- FOR EACH ROW en un trigger se usa para indicar que el trigger se ejecutará una vez por cada fila afectada por la operación.
+    Verdadero. 

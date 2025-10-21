@@ -4,5 +4,5 @@ CREATE TABLE appointments.APPOINTMENTS_PER_PATIENT (
     count_appointments integer(11),
     last_update datetime,
 	user varchar(16)
-    );
+);
     
